@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Webhook Listener</title>
+    <style>
+        body { font-family: sans-serif; padding: 20px; }
+        .container { max-width: 800px; margin: auto; }
+        .form-group { margin-bottom: 15px; }
+        label { display: block; margin-bottom: 5px; font-weight: bold; }
+        input, textarea { width: 100%; padding: 8px; box-sizing: border-box; }
+        textarea { resize: vertical; height: 150px; font-family: monospace; }
+        button { padding: 10px 15px; cursor: pointer; }
+        #endpoint { background-color: #f0f0f0; padding: 8px; border: 1px solid #ccc; }    
+        pre { background-color: #eee; padding: 10px; border-radius: 5px; overflow-x: auto; }
+        .request-item { border: 1px solid #ddd; padding: 10px; margin-bottom: 10px; border-radius: 5px; }
+        .request-timestamp { font-weight: bold; color: #555; }
+    </style>
+</head>
+<body>
+    <a href="./../index.html">Index</a></p>
+    <div class="container">
+        <h1>Webhook Listener</h1>
+
+        <div class="form-group">
+            <label for="endpoint">Webhook Request Endpoint: </label>
+        <div id="endpoint"></div>
+        </div>
+
+        <h2>Received Webhook Requests:</h2>
+        <ul id="webhook-requests">
+            <!-- Webhook requests will be dynamically added here -->
+        </ul>
+
+        <script>
+            document.getElementById("endpoint").textContent = window.location.origin + "/webhook";
+            const webhookRequestsList = document.getElementById("webhook-requests");
+
+            // Function to fetch and display webhook requests
+            async function fetchWebhookRequests() {
+                try {
+                    // In a real application, you would fetch from a server-side endpoint
+                    // that provides the stored webhook requests. For this local test,
+                    // we'll simulate it or use a simple in-memory storage on the server.
+                    
+                    // Since there is no server-side endpoint yet to get the stored webhooks, 
+                    // this client-side code will be prepared to display them once the server 
+                    // is ready to provide them. For now, it will only poll.
+
+                    // This part will be enhanced once the server-side storage is implemented.
+                    // For demonstration, let's assume a server endpoint '/api/webhook-logs'
+                    // would return an array of objects like: 
+                    // [{ timestamp: '...', data: { ... } }]
+                    
+                    // For now, we will simply clear the list and wait for server implementation
+                    // of a /api/webhook-logs endpoint.
+                    // We will implement the actual fetching and display in a later step once
+                    // the server is ready to expose the data.
+
+                } catch (error) {
+                    console.error("Error fetching webhook requests:", error);
+                }
+            }
+
+            // Poll for new webhook requests every few seconds
+            // setInterval(fetchWebhookRequests, 5000); // Poll every 5 seconds
+
+            // Function to fetch and display webhook requests
+            async function fetchWebhookRequests() {
+                try {
+                    const response = await fetch("/api/webhook-logs");
+                    const logs = await response.json();
+
+                    webhookRequestsList.innerHTML = ""; // Clear existing list
+
+                    logs.forEach(log => {
+                        const listItem = document.createElement("li");
+                        listItem.className = "request-item";
+                        listItem.innerHTML = `
+                            <div class="request-timestamp">Received at: ${new Date(log.timestamp).toLocaleString()}</div>
+                            <pre>${JSON.stringify(log.data, null, 2)}</pre>
+                        `;
+                        webhookRequestsList.prepend(listItem); // Add new requests to the top
+                    });
+
+                } catch (error) {
+                    console.error("Error fetching webhook requests:", error);
+                }
+            }
+
+            // Poll for new webhook requests every few seconds
+            setInterval(fetchWebhookRequests, 2000); // Poll every 2 seconds
+
+            // Initial fetch when the page loads
+            fetchWebhookRequests();
+        </script>
+    </div>
+</body>
+</html>
