@@ -1,0 +1,16 @@
+{"timestamp":"2026-04-01T18:46:34.829Z","data":{"code":200,"message":"Test webhook","data":[{"deviceId":"test1","latitude":"-23.5","longitude":"-46.6","timestamp":"2023-10-27T10:00:00Z"}]}}
+{"timestamp":"2026-04-01T18:47:38.907Z","data":{"code":200,"message":"Test webhook","data":[{"deviceId":"test1","latitude":"-23.5","longitude":"-46.6","timestamp":"2023-10-27T10:00:00Z"}]}}
+{"timestampUTC":"2026-04-01T18:58:02.330Z (UTC-3)","data":{"code":200,"message":"Test webhook","data":[{"deviceId":"test1","latitude":"-23.5","longitude":"-46.6","timestamp":"2023-10-27T10:00:00Z"}]}}
+{"timestampUTC":"2026-04-01T18:58:36.076Z UTC-3","data":{"code":200,"message":"Test webhook","data":[{"deviceId":"test1","latitude":"-23.5","longitude":"-46.6","timestamp":"2023-10-27T10:00:00Z"}]}}
+{"timestamp":"2026-04-01T19:03:17.243Z UTC-3","data":{"code":200,"message":"Test webhook","data":[{"deviceId":"test1","latitude":"-23.5","longitude":"-46.6","timestamp":"2023-10-27T10:00:00Z"}]}}
+{"timestamp":"2026-04-01T19:03:40.452Z UTC-3","data":{"code":200,"message":"Test webhook","data":[{"deviceId":"test1","latitude":"-23.5","longitude":"-46.6","timestamp":"2023-10-27T10:00:00Z"}]}}
+{"time":"2026-04-01T19:17:02.288Z UTC-3","data":{"code":200,"message":"Test webhook","data":[{"deviceId":"test1","latitude":"-23.5","longitude":"-46.6","timestamp":"2023-10-27T10:00:00Z"}]}}
+{"time":"2026-04-01T19:37:48.413Z UTC-3","data":{"code":200,"message":"Test webhook","data":[{"deviceId":"test1","latitude":"-23.5","longitude":"-46.6","timestamp":"2023-10-27T10:00:00Z"}]}}
+{"time":"2026-04-01T19:55:59.075Z UTC-3","data":{"code":200,"message":"Test webhook","data":[{"deviceId":"test1","latitude":"-23.5","longitude":"-46.6","timestamp":"2023-10-27T10:00:00Z"}]}}
+{"time":"2026-04-01T21:48:30.545Z UTC-3","data":{"code":200,"message":"Test webhook","data":[{"deviceId":"test1","latitude":"-23.5","longitude":"-46.6","timestamp":"2023-10-27T10:00:00Z"}]}}
+{"time":"2026-04-01T21:49:25.434Z UTC-3","data":{"code":200,"message":"Test webhook","data":[{"deviceId":"test1","latitude":"-23.5","longitude":"-46.6","timestamp":"2023-10-27T10:00:00Z"}]}}
+{"time":"2026-04-01T21:52:37.221Z UTC 0 (GW)","data":{"code":200,"message":"Test webhook","data":[{"deviceId":"test1","latitude":"-23.5","longitude":"-46.6","timestamp":"2023-10-27T10:00:00Z"}]}}
+{"time":"2026-04-01T21:53:30.634Z UTC 0 (GW)","data":{"code":200,"message":"Test webhook","data":[{"deviceId":"test1","latitude":"-23.5","longitude":"-46.6","timestamp":"2023-10-27T10:00:00Z"}]}}
+{"time":"2026-04-01T22:00:46.865Z UTC 0 (GW)","data":{"code":200,"message":"Test webhook","data":[{"deviceId":"test1","latitude":"-23.5","longitude":"-46.6","timestamp":"2023-10-27T10:00:00Z"}]}}
+{"time":"2026-04-01T22:01:03.682Z UTC 0 (GW)","data":{"code":200,"message":"Test webhook","data":[{"deviceId":"test1","latitude":"-23.5","longitude":"-46.6","timestamp":"2023-10-27T10:00:00Z"}]}}
+{"time":"2026-04-01T22:30:21.754Z UTC 0 (GW)","data":{"code":200,"message":"Test webhook","data":[{"deviceId":"test1","latitude":"-23.5","longitude":"-46.6","timestamp":"2023-10-27T10:00:00Z"}]}}

@@ -28,7 +28,32 @@
         <div id="endpoint"></div>
         </div>
 
-        <h2>Received Webhook Requests:</h2>
+        <div>
+            <h2>Received Webhook Requests</h2>
+            <table  style="vertical-align: top;"><tr>
+                <td>
+                    <label for="update-interval">Atualização:</label>
+                    <select id="update-interval">
+                        <option value="5000">5s</option>
+                        <option value="15000" selected>15s</option>
+                        <option value="30000">30s</option>
+                        <option value="60000">60s</option>
+                        <option value="180000">3min</option>
+                        <option value="300000">5min</option>
+                        <option value="600000">10min</option>
+                        <option value="1800000">30min</option>
+                        <option value="3600000">60min</option>
+                        <option value="10800000">3h</option>
+                        <option value="18000000">5h</option>
+                        <option value="43200000">12h</option>
+                        <option value="86400000">24h</option>
+                        <option value="0">Never</option>
+                    </select>
+                </td>
+                <td  style="vertical-align: top;"><a href="/download-log" style="margin-left: 20px; font-weight: bold;">Download Log</a></td>
+                <td style="vertical-align: top; padding-left: 20px;"><button id="seeLogBtn">See Log</button></td>
+            </tr></table>
+        </div>
         <ul id="webhook-requests">
             <!-- Webhook requests will be dynamically added here -->
         </ul>
@@ -36,35 +61,15 @@
         <script>
             document.getElementById("endpoint").textContent = window.location.origin + "/webhook";
             const webhookRequestsList = document.getElementById("webhook-requests");
+            const updateIntervalSelect = document.getElementById("update-interval");
+            let updateIntervalId;
 
-            // Function to fetch and display webhook requests
-            async function fetchWebhookRequests() {
-                try {
-                    // In a real application, you would fetch from a server-side endpoint
-                    // that provides the stored webhook requests. For this local test,
-                    // we'll simulate it or use a simple in-memory storage on the server.
-                    
-                    // Since there is no server-side endpoint yet to get the stored webhooks, 
-                    // this client-side code will be prepared to display them once the server 
-                    // is ready to provide them. For now, it will only poll.
-
-                    // This part will be enhanced once the server-side storage is implemented.
-                    // For demonstration, let's assume a server endpoint '/api/webhook-logs'
-                    // would return an array of objects like: 
-                    // [{ timestamp: '...', data: { ... } }]
-                    
-                    // For now, we will simply clear the list and wait for server implementation
-                    // of a /api/webhook-logs endpoint.
-                    // We will implement the actual fetching and display in a later step once
-                    // the server is ready to expose the data.
-
-                } catch (error) {
-                    console.error("Error fetching webhook requests:", error);
-                }
+            // Function to convert interval string to milliseconds
+            function parseInterval(value) {
+                if (value === "0") return 0; // Never
+                const num = parseInt(value, 10);
+                return num; // Values are already in milliseconds
             }
-
-            // Poll for new webhook requests every few seconds
-            // setInterval(fetchWebhookRequests, 5000); // Poll every 5 seconds
 
             // Function to fetch and display webhook requests
             async function fetchWebhookRequests() {
@@ -78,7 +83,7 @@
                         const listItem = document.createElement("li");
                         listItem.className = "request-item";
                         listItem.innerHTML = `
-                            <div class="request-timestamp">Received at: ${new Date(log.timestamp).toLocaleString()}</div>
+                            <div class="request-timestamp">Received at: ${new Date(log.timestamp).toLocaleString('pt-BR', { timeZone: 'UTC' })} UTC 0 (Gw) </div>
                             <pre>${JSON.stringify(log.data, null, 2)}</pre>
                         `;
                         webhookRequestsList.prepend(listItem); // Add new requests to the top
@@ -89,11 +94,44 @@
                 }
             }
 
-            // Poll for new webhook requests every few seconds
-            setInterval(fetchWebhookRequests, 2000); // Poll every 2 seconds
+            // Function to set or clear the update interval
+            function setUpdateInterval() {
+                if (updateIntervalId) {
+                    clearInterval(updateIntervalId);
+                }
 
-            // Initial fetch when the page loads
-            fetchWebhookRequests();
+                const interval = parseInterval(updateIntervalSelect.value);
+                if (interval > 0) {
+                    updateIntervalId = setInterval(fetchWebhookRequests, interval);
+                }
+                fetchWebhookRequests(); // Initial fetch immediately
+            }
+
+            // Event listener for combo-box changes
+            updateIntervalSelect.addEventListener("change", setUpdateInterval);
+
+            // Set initial interval
+            setUpdateInterval();
+
+            // See Log Button functionality
+            const seeLogBtn = document.getElementById("seeLogBtn");
+            seeLogBtn.addEventListener("click", async () => {
+                try {
+                    const response = await fetch("/view-log");
+                    const logContent = await response.text();
+
+                    const logWindow = window.open("", "Log Viewer", "width=800,height=600");
+                    if (logWindow) {
+                        logWindow.document.write("<pre>" + logContent + "</pre>");
+                        logWindow.document.close();
+                    } else {
+                        alert("Popup blocked! Please allow popups for this site to view the log.");
+                    }
+                } catch (error) {
+                    console.error("Error fetching log file for viewing:", error);
+                    alert("Error fetching log file.");
+                }
+            });
         </script>
     </div>
 </body>
