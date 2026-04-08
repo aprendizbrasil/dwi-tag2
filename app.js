@@ -5,13 +5,26 @@ const fs = require("fs"); // Required for file system operations
 
 const app = express();
 const PORT = 8300;
-const LOG_FILE = "log.txt"; // Log file path
+const MAX_MEMORY_LOGS = 20; // Limit for in-memory webhook requests
+
+const LOGS_DIR = path.join(__dirname, 'log'); // Directory for daily logs
+
+// Ensure logs directory exists
+if (!fs.existsSync(LOGS_DIR)) {
+    fs.mkdirSync(LOGS_DIR);
+}
+
+// Helper function to get the current day\'s log file path (UTC)
+function getDailyLogFilePath() {
+    const date = new Date().toISOString().substring(0, 10); // YYYY-MM-DD in UTC
+    return path.join(LOGS_DIR, `${date}.log`);
+}
 
 // Middleware
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
-// Serve static files from the 'public' directory
+// Serve static files from the \'public\' directory
 app.use(express.static(path.join(__dirname, "public")));
 
 // In-memory storage for webhook requests
@@ -34,11 +47,15 @@ app.post("/webhook", (req, res) => {
 
         // Append to in-memory logs
         webhookLogs.push(logEntry);
+        // Enforce memory limit
+        if (webhookLogs.length > MAX_MEMORY_LOGS) {
+            webhookLogs.shift(); // Remove the oldest entry
+        }
 
-        // Append to log.txt file
-        fs.appendFile(LOG_FILE, JSON.stringify(logEntryFile) + "\n", (err) => {
+        // Append to current day\'s log file
+        fs.appendFile(getDailyLogFilePath(), JSON.stringify(logEntryFile) + "\n", (err) => {
             if (err) {
-                console.error("Error writing to log.txt:", err);
+                console.error("Error writing to log file:", err);
             }
         });
 
@@ -53,9 +70,9 @@ app.get("/api/webhook-logs", (req, res) => {
     res.status(200).json(webhookLogs);
 });
 
-// Route to download log.txt
+// Route to download current day\'s log file
 app.get("/download-log", (req, res) => {
-    const logFilePath = path.join(__dirname, LOG_FILE);
+    const logFilePath = getDailyLogFilePath();
     res.download(logFilePath, (err) => {
         if (err) {
             console.error("Error downloading log file:", err);
@@ -64,9 +81,9 @@ app.get("/download-log", (req, res) => {
     });
 });
 
-// Route to view log.txt content
+// Route to view current day\'s log file content
 app.get("/view-log", (req, res) => {
-    const logFilePath = path.join(__dirname, LOG_FILE);
+    const logFilePath = getDailyLogFilePath();
     fs.readFile(logFilePath, "utf8", (err, data) => {
         if (err) {
             console.error("Error reading log file:", err);
@@ -75,6 +92,12 @@ app.get("/view-log", (req, res) => {
             res.status(200).set("Content-Type", "text/plain").send(data);
         }
     });
+});
+
+// Route to clear in-memory webhook logs
+app.post("/clear-memory-logs", (req, res) => {
+    webhookLogs.length = 0; // Clear the in-memory array
+    res.status(200).json({ status: "success", message: "In-memory logs cleared." });
 });
 
 // Start the server

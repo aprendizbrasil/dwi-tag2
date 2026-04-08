@@ -52,6 +52,7 @@
                 </td>
                 <td  style="vertical-align: top;"><a href="/download-log" style="margin-left: 20px; font-weight: bold;">Download Log</a></td>
                 <td style="vertical-align: top; padding-left: 20px;"><button id="seeLogBtn">See Log</button></td>
+                <td style="vertical-align: top; padding-left: 20px;"><button id="clearLogBtn">Clear Log</button></td>
             </tr></table>
         </div>
         <ul id="webhook-requests">
@@ -130,6 +131,25 @@
                 } catch (error) {
                     console.error("Error fetching log file for viewing:", error);
                     alert("Error fetching log file.");
+                }
+            });
+
+            // Clear Log Button functionality
+            const clearLogBtn = document.getElementById("clearLogBtn");
+            clearLogBtn.addEventListener("click", async () => {
+                try {
+                    const response = await fetch("/clear-memory-logs", {
+                        method: "POST"
+                    });
+                    const result = await response.json();
+                    if (result.status === "success") {
+                        fetchWebhookRequests(); // Refresh logs on screen
+                    } else {
+                        alert("Error clearing in-memory logs: " + result.message);
+                    }
+                } catch (error) {
+                    console.error("Error clearing in-memory logs:", error);
+                    alert("Error clearing in-memory logs.");
                 }
             });
         </script>

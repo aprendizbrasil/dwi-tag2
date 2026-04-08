@@ -1,4 +1,5 @@
 inst/
+log/
 node_modules/
 settings.json
 index_old.html
